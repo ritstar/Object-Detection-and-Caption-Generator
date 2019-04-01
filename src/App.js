@@ -1,17 +1,20 @@
-import React, {Component} from "react";
+import React, { Component } from "react";
 import ReactDOM from "react-dom";
 import MagicDropzone from "react-magic-dropzone";
-
+import Axios from 'axios';
 import * as cocoSsd from "@tensorflow-models/coco-ssd";
 import "@tensorflow/tfjs";
 
 import './App.css';
 
+
 class App extends Component {
   state = {
     model: null,
     preview: "",
-    predictions: []
+    predictions: [],
+    err: false
+
   };
 
   componentDidMount() {
@@ -23,7 +26,13 @@ class App extends Component {
   }
 
   onDrop = (accepted, rejected, links) => {
-    this.setState({ preview: accepted[0].preview || links[0] });
+    if (accepted) {
+      this.setState({ preview: accepted[0].preview || links[0] });
+      this.state.err = true;
+    }
+    if (rejected == true) {
+      alert("Input format not supported");
+    }
   };
 
   cropToCanvas = (image, canvas, ctx) => {
@@ -93,41 +102,53 @@ class App extends Component {
         // Draw the text last to ensure it's on top.
         ctx.fillStyle = "#000000";
         ctx.fillText(prediction.class, x, y);
+        Axios.get('http://localhost:3000/obj/' + prediction.class);
       });
     });
   };
+
+  /*onClik =(event) =>{
+    this.setState({preview: event.target.value});
+    
+  }*/
   render() {
     return (
+      <div className="App">
         <div className="Dropzone-page">
-        {this.state.model ? (
-          <MagicDropzone
-            className="Dropzone"
-            accept="image/jpeg, image/png, .jpg, .jpeg, .png"
-            multiple={false}
-            onDrop={this.onDrop}
-          >
-            {this.state.preview ? (
-              <img
-                alt="upload preview"
-                onLoad={this.onImageChange}
-                className="Dropzone-img"
-                src={this.state.preview}
-              />
-            ) : (
-              "Choose or drop a file."
+
+          <h1>Extraction of information from an image</h1>
+          {this.state.model ? (
+            <MagicDropzone
+              className="Dropzone"
+              accept="image/jpeg, image/png, .jpg, .jpeg, .png"
+              multiple={false}
+              onDrop={this.onDrop}
+            >
+
+              {this.state.err ? (
+                <img
+                  alt="upload preview"
+                  onLoad={this.onImageChange}
+                  className="Dropzone-img"
+                  src={this.state.preview}
+                />
+              ) : (
+                  "Choose or drop a file."
+                )}
+              <canvas id="canvas" />
+            </MagicDropzone>
+          ) : (
+              <div className="Dropzone">Loading model...</div>
             )}
-            <canvas id="canvas" />
-          </MagicDropzone>
-        ) : (
-          <div className="Dropzone">Loading model...</div>
-        )}
-        <div className="Members">
-            <h3>Made By -</h3>
+          {console.log(this.state.model)}
+          <div className="Members">
+            <h3>Project made by -</h3>
             <ol>
               <li>Ritesh Kumar Jha</li>
               <li>Abhay Pratap Singh</li>
               <li>Anurag Dixit</li>
             </ol>
+          </div>
         </div>
       </div>
     );
