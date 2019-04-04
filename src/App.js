@@ -17,7 +17,7 @@ class App extends Component {
 
   };
 
-  componentDidMount() {
+  componentWillMount() {
     cocoSsd.load().then(model => {
       this.setState({
         model: model
@@ -75,7 +75,7 @@ class App extends Component {
     const ctx = c.getContext("2d");
     this.cropToCanvas(e.target, c, ctx);
     this.state.model.detect(c).then(predictions => {
-      // Font options.
+
       const font = "16px sans-serif";
       ctx.font = font;
       ctx.textBaseline = "top";
@@ -85,14 +85,14 @@ class App extends Component {
         const y = prediction.bbox[1];
         const width = prediction.bbox[2];
         const height = prediction.bbox[3];
-        // Draw the bounding box.
+
         ctx.strokeStyle = "#00FFFF";
         ctx.lineWidth = 4;
         ctx.strokeRect(x, y, width, height);
-        // Draw the label background.
+
         ctx.fillStyle = "#00FFFF";
         const textWidth = ctx.measureText(prediction.class).width;
-        const textHeight = parseInt(font, 10); // base 10
+        const textHeight = parseInt(font, 10);
         ctx.fillRect(x, y, textWidth + 4, textHeight + 4);
       });
 
@@ -107,10 +107,6 @@ class App extends Component {
     });
   };
 
-  /*onClik =(event) =>{
-    this.setState({preview: event.target.value});
-    
-  }*/
   render() {
     return (
       <div className="App">
@@ -149,6 +145,7 @@ class App extends Component {
               <li>Anurag Dixit</li>
             </ol>
           </div>
+          <a href='/classes' className="list-class">List of classes which our app can detect</a>
         </div>
       </div>
     );
