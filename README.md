@@ -1,3 +1,5 @@
+![alt GLA University Logo](https://image3.mouthshut.com/images/imagesp/925773425s.png)
+
 # Object detection using Tensorflow.JS and React.JS.
 
 This is an third year mini project by -
