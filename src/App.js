@@ -23,12 +23,14 @@ class App extends Component {
         model: model
       });
     });
+
   }
 
   onDrop = (accepted, rejected, links) => {
     if (accepted) {
       this.setState({ preview: accepted[0].preview || links[0] });
       this.state.err = true;
+
     }
     if (rejected == true) {
       alert("Input format not supported");
@@ -102,7 +104,7 @@ class App extends Component {
         // Draw the text last to ensure it's on top.
         ctx.fillStyle = "#000000";
         ctx.fillText(prediction.class, x, y);
-        Axios.get('http://localhost:3000/obj/' + prediction.class);
+
       });
     });
   };
