@@ -6,7 +6,8 @@ This is an third year mini project by -
 
 ## Ritesh Kumar Jha
 ## Abhay pratap singh
-## Anurag dixit
+## Vinit Singh
+## Ashish Varshney
 
 To run this app, follow these steps :-
 1. Download and install [NodeJS](https://nodejs.org/en/) on your machine.
