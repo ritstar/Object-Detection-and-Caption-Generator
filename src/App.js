@@ -3,21 +3,26 @@ import ReactDOM from "react-dom";
 import MagicDropzone from "react-magic-dropzone";
 import Axios from 'axios';
 import * as cocoSsd from "@tensorflow-models/coco-ssd";
+import FormData from 'form-data';
 import "@tensorflow/tfjs";
+import { Container, Row, Col } from 'reactstrap';
+import CreatedBy from './Component/CreatedBy';
+import 'bootstrap/dist/css/bootstrap.css';
 
 import './App.css';
 
-
+import ShowObjectCount from './ShowObjectCount';
 class App extends Component {
   state = {
     model: null,
     preview: "",
     predictions: [],
-    err: false
-
+    predictionButtonClick: false,
+    err: false,
+    objects: {}
   };
 
-  componentWillMount() {
+  componentDidMount() {
     cocoSsd.load().then(model => {
       this.setState({
         model: model
@@ -97,56 +102,73 @@ class App extends Component {
         const textHeight = parseInt(font, 10);
         ctx.fillRect(x, y, textWidth + 4, textHeight + 4);
       });
-
+      let obj = {};
       predictions.forEach(prediction => {
         const x = prediction.bbox[0];
         const y = prediction.bbox[1];
-        // Draw the text last to ensure it's on top.
+
+        if (prediction.class in obj) {
+          obj[prediction.class] += 1;
+        }
+        else {
+          obj[prediction.class] = 1;
+        }
         ctx.fillStyle = "#000000";
         ctx.fillText(prediction.class, x, y);
-
       });
+      this.setState({ objects: obj });
+      console.log(this.state.objects);
+      console.log(this.state.model);
     });
   };
+
 
   render() {
     return (
       <div className="App">
         <div className="Dropzone-page">
+          <h2>Extraction of information from an image</h2>
+          <Container>
+            <Row>
+              <Col>
+                <div style={{ textAlign: 'center' }}>
+                  {this.state.model ? (
+                    <MagicDropzone
+                      className="Dropzone"
+                      accept="image/jpeg, image/png, .jpg, .jpeg, .png"
+                      multiple={false}
+                      onDrop={this.onDrop}
+                      name="image"
+                      id="image"
+                    >
 
-          <h1>Extraction of information from an image</h1>
-          {this.state.model ? (
-            <MagicDropzone
-              className="Dropzone"
-              accept="image/jpeg, image/png, .jpg, .jpeg, .png"
-              multiple={false}
-              onDrop={this.onDrop}
-            >
-
-              {this.state.err ? (
-                <img
-                  alt="upload preview"
-                  onLoad={this.onImageChange}
-                  className="Dropzone-img"
-                  src={this.state.preview}
-                />
-              ) : (
-                  "Choose or drop a file."
-                )}
-              <canvas id="canvas" />
-            </MagicDropzone>
-          ) : (
-              <div className="Dropzone">Loading model...</div>
-            )}
-          {console.log(this.state.model)}
-          <div className="Members">
-            <h3>Project made by -</h3>
-            <ol>
-              <li>Ritesh Kumar Jha</li>
-              <li>Abhay Pratap Singh</li>
-              <li>Anurag Dixit</li>
-            </ol>
-          </div>
+                      {this.state.err ? (
+                        <img
+                          alt="upload preview"
+                          onLoad={this.onImageChange}
+                          className="Dropzone-img"
+                          src={this.state.preview}
+                        />
+                      ) : (
+                          "Choose or drop a file."
+                        )}
+                      <canvas id="canvas" />
+                    </MagicDropzone>
+                  ) : (
+                      <div className="Dropzone">Loading model...</div>
+                    )}
+                </div>
+              </Col>
+              <Col>
+                <ShowObjectCount store={this.state.objects}></ShowObjectCount>
+              </Col>
+            </Row>
+            <Row style={{ display: "flex", flexDirection: "verticle", justifyContent: "center", marginTop: "20px" }}>
+              {this.state.preview ? (<a href='/predict'><button>Generate Prediction</button></a>)
+                : <div></div>}
+            </Row>
+          </Container>
+          <CreatedBy />
           <a href='/classes' className="list-class">List of classes which our app can detect</a>
         </div>
       </div>

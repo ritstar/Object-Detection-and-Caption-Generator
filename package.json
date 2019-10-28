@@ -6,11 +6,15 @@
     "@tensorflow-models/coco-ssd": "0.1.1",
     "@tensorflow/tfjs": "0.14.0",
     "axios": "^0.18.0",
+    "bootstrap": "^4.3.1",
+    "bootstrap-toggle": "^2.2.2",
+    "form-data": "^2.5.1",
     "react": "^16.8.3",
     "react-dom": "^16.8.3",
     "react-magic-dropzone": "1.0.1",
     "react-router-dom": "^5.0.0",
-    "react-scripts": "2.1.5"
+    "react-scripts": "2.1.5",
+    "reactstrap": "^8.0.1"
   },
   "scripts": {
     "start": "react-scripts start",

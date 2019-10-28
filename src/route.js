@@ -1,15 +1,19 @@
 import React from 'react';
-import { Switch, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import App from './App';
 import Classes from './Component/Classes';
 import notFoundHandler from './Component/404';
+import Predict from './Component/Predict';
 
 const Routes = () => (
-    <Switch>
-        <Route exact path='/' component={App} />
-        <Route exact path='/classes' component={Classes} />
-        <Route component={notFoundHandler} />
-    </Switch>
+    <Router>
+        <Switch>
+            <Route exact path='/' component={App} />
+            <Route path='/classes' component={Classes} />
+            <Route path='/predict' component={Predict} />
+            <Route path='*' component={notFoundHandler} status={404} />
+        </Switch>
+    </Router>
 )
 
 
